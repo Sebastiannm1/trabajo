@@ -1,0 +1,85 @@
+/* Estilos para el cuerpo y el encabezado */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffefd5; /* Color de fondo amarillo almendra */
+}
+
+header {
+    background-color: #ff6b6b; /* Rojo coral */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Estilos para la sección de películas */
+#peliculas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.pelicula {
+    border: 2px solid #ffcc99; /* Borde color melocotón */
+    padding: 15px;
+    margin: 15px;
+    width: 300px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pelicula h2 {
+    color: #ff6b6b; /* Rojo coral */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.pelicula p {
+    color: #888;
+    font-size: 1rem;
+}
+
+/* Estilos para el formulario de edición de películas */
+#formulario {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    border: 2px solid #ffcc99; /* Borde color melocotón */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#formulario h2 {
+    color: #ff6b6b; /* Rojo coral */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+#formulario label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+#formulario input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+}
+
+#formulario button {
+    background-color: #ff6b6b; /* Rojo coral */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+#formulario button:hover {
+    background-color: #ff4500; /* Rojo naranja al pasar el mouse */
+}
