@@ -1,0 +1,118 @@
+/* Estilos para la página con temática espacial */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.cabecera {
+    background-color: transparent;
+    padding: 10px 0;
+}
+
+.navegador {
+    background-color: transparent;
+}
+
+.navegador ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navegador ul li {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+.navegador ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.imagen-slider {
+    margin-top: 20px;
+    background-color: transparent;
+    text-align: center;
+    padding: 20px;
+}
+
+.peliculas {
+    text-align: center;
+    padding: 20px;
+}
+
+.listapeliculas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.pelicula {
+    background-color: #000;
+    border: 2px solid #3498db;
+    padding: 20px;
+    margin: 10px;
+    color: #fff;
+    text-align: center;
+    width: calc(30% - 20px);
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.pelicula:hover {
+    transform: scale(1.05);
+}
+
+.pelicula img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    border: 1px solid #3498db;
+    border-radius: 5px;
+}
+
+.boton {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.boton:hover {
+    background-color: #2980b9;
+}
+
+.pie {
+    background-color: transparent;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Fondo espacial */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('805172.jpg'); /* Reemplaza 'espacio.jpg' con la URL de tu imagen espacial */
+    background-size: cover;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+/* Estilos adicionales según tu preferencia */
