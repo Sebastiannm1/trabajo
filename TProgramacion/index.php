@@ -1,6 +1,6 @@
 <?php
 require_once 'conexion.php';
-require_once 'pelicula.php';
+require_once 'Repositoriopelicula.php';
 
 $conexion = new Conexion();
 $pelicula = new Pelicula($conexion->conexion);
