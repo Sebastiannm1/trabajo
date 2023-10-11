@@ -1,6 +1,6 @@
 <?php
 require_once 'conexion.php';
-require_once 'Repositoriopelicula.php';
+require_once 'pelicula.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conexion = new Conexion();

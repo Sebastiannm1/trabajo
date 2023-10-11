@@ -2,7 +2,7 @@
 
 require_once Repositoriopelicula
 
-class Objeto_pelicula extends Repositoriopelicula {
+class pelicula extends Repositoriopelicula {
 
     public $nombre;
     public $publico;

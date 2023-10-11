@@ -1,7 +1,7 @@
 <?php
 if (isset($_GET['id'])) {
     require_once 'conexion.php';
-    require_once 'Repositoriopelicula.php';
+    require_once 'pelicula.php';
 
     $id_pelicula = $_GET['id'];
     $conexion = new Conexion();
