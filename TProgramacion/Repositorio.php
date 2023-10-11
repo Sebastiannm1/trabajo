@@ -1,5 +1,8 @@
 <?php
-class Pelicula {
+
+require_once 'objpelicula';
+
+class repositorio {
     private $conexion;
 
     public function __construct($conexion) {

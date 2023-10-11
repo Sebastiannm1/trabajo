@@ -5,7 +5,7 @@ if (isset($_GET['id'])) {
 
     $id_pelicula = $_GET['id'];
     $conexion = new Conexion();
-    $pelicula = new Pelicula($conexion->conexion);
+    $pelicula = pelicula($conexion->conexion);
 
     // Realizar la eliminación en la base de datos
     $pelicula->eliminarPelicula($id_pelicula);
