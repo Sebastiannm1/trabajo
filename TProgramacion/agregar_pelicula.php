@@ -1,10 +1,10 @@
 <?php
-require_once 'conexion.php';
+require_once 'conexion.php';s
 require_once 'pelicula.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conexion = new Conexion();
-    $pelicula = new Pelicula($conexion->conexion);
+    $pelicula = pelicula($conexion->conexion);
 
     $nombre = $_POST['nombre'];
     $publico = $_POST['publico'];

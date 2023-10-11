@@ -4,7 +4,7 @@ require_once 'pelicula.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conexion = new Conexion();
-    $pelicula = new Pelicula($conexion->obtenerConexion());
+    $pelicula = pelicula($conexion->obtenerConexion());
 
     $id_pelicula = $_POST['id_pelicula'];
     $nombre = $_POST['nombre'];
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_GET['id'])) {
     $id_pelicula = $_GET['id'];
     $conexion = new Conexion();
-    $pelicula = new Pelicula($conexion->obtenerConexion());
+    $pelicula = pelicula($conexion->obtenerConexion());
 
     $datos_pelicula = $pelicula->obtenerPeliculaPorId($id_pelicula);
 
