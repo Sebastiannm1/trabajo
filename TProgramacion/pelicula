@@ -1,6 +1,8 @@
 <?php
 
-class pelicula {
+require_once Repositoriopelicula
+
+class Objeto_pelicula extends Repositoriopelicula {
 
     public $nombre;
     public $publico;
