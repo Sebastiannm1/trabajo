@@ -1,9 +1,17 @@
 <?php
-require_once 'conexion.php';
-require_once 'pelicula.php';
 
-$conexion = new Conexion();
-$pelicula = new repositorio($conexion->conexion);
+require_once 'pelicula.php';
+require_once 'Repositorio.php';
+
+session_start();
+$usuario_autenticado = false;
+
+if (isset($_SESSION['usuario'])) {
+    $usuario = unserialize($_SESSION['usuario']);
+    $usuario_autenticado = true;
+}
+
+$pelicula = new repositorio();
 
 $peliculas = $pelicula->obtenerPeliculas();
 
@@ -138,62 +146,70 @@ if (isset($_GET['eliminar'])) {
     </div>
 
     <div class="peliculas">
-    <h2>Películas</h2>
-    <div class="listapeliculas">
-        <?php
-        $contador = 0;
-        foreach ($peliculas as $pelicula) {
-            if ($contador % 3 == 0) {
-                echo '<div class="grupo-peliculas">';
-            }
-        ?>
-            <div class="pelicula-info">
-                <!-- Contenido de la película -->
-                <h3><?php echo $pelicula['nombre']; ?></h3>
-                <p>Trama: <?php echo $pelicula['trama']; ?></p>
-                <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
-                <p>Origen: <?php echo $pelicula['origen']; ?></p>
-                <p>Duración: <?php echo $pelicula['duracion']; ?> min</p>
-                <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
-                <p>Director: <?php echo $pelicula['director']; ?></p>
-                <p>Precio: $<?php echo $pelicula['precio']; ?></p>
-                <a href="editar_pelicula.php?id=<?php echo $pelicula['id_pelicula']; ?>">Editar</a>
-                <a href="index.php?eliminar=<?php echo $pelicula['id_pelicula']; ?>">Eliminar</a>
-            </div>
-        <?php
-            if ($contador % 3 == 2 || $contador == count($peliculas) - 1) {
+        <h2>Películas</h2>
+        <div class="listapeliculas">
+            <?php
+             $contador = 0;
+             foreach ($peliculas as $pelicula) {
+                if ($contador % 3 == 0) {
+                    echo '<div class="fila-peliculas">';
+                }
+            ?>
+                <div class="pelicula-info">
+                    <!-- Contenido de la película -->
+                    <h3><?php echo $pelicula['nombre']; ?></h3>
+                    <p>Trama: <?php echo $pelicula['trama']; ?></p>
+                    <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
+                    <p>Origen: <?php echo $pelicula['origen']; ?></p>
+                    <p>Duración: <?php echo $pelicula['duracion']; ?> min</p>
+                    <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
+                    <p>Director: <?php echo $pelicula['director']; ?></p>
+                    <p>Precio: $<?php echo $pelicula['precio']; ?></p>
+                    <?php
+                        if ($usuario_autenticado) {
+                        echo '<a href="editar_pelicula.php?id='.$pelicula['id_pelicula'].'">Editar</a>
+                          <a href="index.php?eliminar='.$pelicula['id_pelicula'].'">Eliminar</a>';
+                        }
+                    ?>
+                </div>
+            <?php
+                if ($contador % 3 == 2 || $contador == count($peliculas) - 1) {
                 echo '</div>';
-            }
-            $contador++;
-        }
-        ?>
+                }
+                $contador++;
+                }
+            ?>
     </div>
 </div>
 
 <div class="agregar-pelicula">
     <!-- Contenido del formulario de agregar película -->
-    <form action="index.php" method="post">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br>
-        <label for="publico">Clasificación:</label>
-        <input type="text" id="publico" name="publico" required><br>
-        <label for="origen">Origen:</label>
-        <input type="text" id="origen" name="origen" required><br>
-        <label for="duracion">Duración (minutos):</label>
-        <input type="number" id="duracion" name="duracion" required><br>
-        <label for="idioma">Idioma:</label>
-        <input type="text" id="idioma" name="idioma" required><br>
-        <label for="director">Director:</label>
-        <input type="text" id="director" name="director" required><br>
-        <label for="precio">Precio:</label>
-        <input type="number" id="precio" name="precio" required><br>
-        <button type="submit">Agregar Película</button>
-    </form>         
+    <?php
+    if ($usuario_autenticado) {
+        echo '<form action="index.php" method="post">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required><br>
+                <label for="publico">Clasificación:</label>
+                <input type="text" id="publico" name="publico" required><br>
+                <label for="origen">Origen:</label>
+                <input type="text" id="origen" name="origen" required><br>
+                <label for="duracion">Duración (minutos):</label>
+                <input type="number" id="duracion" name="duracion" required><br>
+                <label for="idioma">Idioma:</label>
+                <input type="text" id="idioma" name="idioma" required><br>
+                <label for="director">Director:</label>
+                <input type="text" id="director" name="director" required><br>
+                <label for="precio">Precio:</label>
+                <input type="number" id="precio" name="precio" required><br>
+                <button type="submit">Agregar Película</button>
+              </form>';
+    }
+    ?>
 </div>
-
-<div class="pie">
+<footer>
+    <div class="pie">
     <!-- Contenido del pie de página -->
-    <div class="pie-padre">
+        <div class="pie-padre">
             <div class="pie-izquierda">
                 <h2>Cine MAX</h2> </div>
             <div class="pie-centro"></div>
@@ -215,7 +231,8 @@ if (isset($_GET['eliminar'])) {
 
             </div>
         </div>
-</div>
+    </div>
+</footer>
     <script src="funciones.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'objpelicula';
+require_once 'pelicula.php';
 
 class repositorio {
     private $conexion;

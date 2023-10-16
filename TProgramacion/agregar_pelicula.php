@@ -1,5 +1,5 @@
 <?php
-require_once 'conexion.php';s
+require_once 'conexion.php';
 require_once 'pelicula.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
