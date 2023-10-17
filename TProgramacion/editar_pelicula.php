@@ -4,7 +4,7 @@ require_once 'pelicula.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conexion = new Conexion();
-    $pelicula = new repositorio($conexion->obtenerConexion());
+    $pelicula = new pelicula($conexion->obtenerConexion());
 
     $id_pelicula = $_POST['id_pelicula'];
     $nombre = $_POST['nombre'];

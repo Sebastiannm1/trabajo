@@ -35,7 +35,7 @@ class repositorio {
      *               Si tiene éxito, retorna una instancia de la clase Usuario
      *               con los datos del usuario autenticado.
      */
-    public function login($nombre_usuario, $clave)   // ver si es nombre_usuario o usuario !!!! 
+    public function login($nombre_usuario, $clave)  
     {
         $q = "SELECT id, nombre, apellido, clave FROM administrador WHERE usuario= ?";
         $query = self::$conexion->prepare($q);
@@ -114,7 +114,7 @@ class repositorio {
 
     public function eliminarPelicula($id_pelicula) {
         $query = "DELETE FROM pelicula WHERE id_pelicula = ?";
-        $stmt = $this->conexion->prepare($query);
+        $stmt = self::$conexion->prepare($query);
         $stmt->bind_param("i", $id_pelicula);
         
         if ($stmt->execute()) {
@@ -137,7 +137,7 @@ class repositorio {
     }
     public function obtenerPeliculaPorId($id) {
         $query = "SELECT * FROM pelicula WHERE id_pelicula = ?";
-        $stmt = $this->conexion->prepare($query);
+        $stmt = self::$conexion->prepare($query);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $resultado = $stmt->get_result();
