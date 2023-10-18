@@ -146,40 +146,41 @@ if (isset($_GET['eliminar'])) {
     </div>
 
     <div class="peliculas">
-        <h2>Películas</h2>
-        <div class="listapeliculas">
+    <h2>Películas</h2>
+    <div class="listapeliculas">
+    <?php
+    $contador = 0;
+    foreach ($peliculas as $pelicula) {
+        if ($contador % 3 == 0) {
+            echo '<div class="fila-peliculas">'; // Abre una nueva fila cada tres películas
+        }
+        ?>
+        <div class="pelicula-info">
+            <!-- Contenido de la película -->
+            <h3><?php echo $pelicula['nombre']; ?></h3>
+            <p>Trama: <?php echo $pelicula['trama']; ?></p>
+            <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
+            <p>Origen: <?php echo $pelicula['origen']; ?></p>
+            <p>Duración: <?php echo $pelicula['duracion']; ?> min</p>
+            <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
+            <p>Director: <?php echo $pelicula['director']; ?></p>
+            <p>Precio: $<?php echo $pelicula['precio']; ?></p>
             <?php
-             $contador = 0;
-             foreach ($peliculas as $pelicula) {
-                if ($contador % 3 == 0) {
-                    echo '<div class="fila-peliculas">';
-                }
+            if ($usuario_autenticado) {
+                echo '<a href="editar_pelicula.php?id=' . $pelicula['id_pelicula'] . '">Editar</a>
+                      <a href="index.php?eliminar=' . $pelicula['id_pelicula'] . '">Eliminar</a>';
+            }
             ?>
-                <div class="pelicula-info">
-                    <!-- Contenido de la película -->
-                    <h3><?php echo $pelicula['nombre']; ?></h3>
-                    <p>Trama: <?php echo $pelicula['trama']; ?></p>
-                    <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
-                    <p>Origen: <?php echo $pelicula['origen']; ?></p>
-                    <p>Duración: <?php echo $pelicula['duracion']; ?> min</p>
-                    <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
-                    <p>Director: <?php echo $pelicula['director']; ?></p>
-                    <p>Precio: $<?php echo $pelicula['precio']; ?></p>
-                    <?php
-                        if ($usuario_autenticado) {
-                        echo '<a href="editar_pelicula.php?id='.$pelicula['id_pelicula'].'">Editar</a>
-                          <a href="index.php?eliminar='.$pelicula['id_pelicula'].'">Eliminar</a>';
-                        }
-                    ?>
-                </div>
-            <?php
-                if ($contador % 3 == 2 || $contador == count($peliculas) - 1) {
-                echo '</div>';
-                }
-                $contador++;
-                }
-            ?>
-    </div>
+        </div>
+        <?php
+        if ($contador % 3 == 2 || $contador == count($peliculas) - 1) {
+            echo '</div>'; // Cierra la fila actual al final de cada conjunto de tres películas o cuando se alcance la última película.
+        }
+        $contador++;
+    }
+    ?>
+</div>
+
 </div>
 
 <div class="agregar-pelicula">

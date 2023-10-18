@@ -3,8 +3,8 @@
 function credenciales() {
     return [
         'host' => 'localhost',
-        'usuario' => 'Sebastianmerlo',
-        'clave' => 'sebastian1234',
+        'usuario' => 'facundo',
+        'clave' => 'falbano.106',
         'nombreBaseDatos' => 'cine',
     ];
 }
