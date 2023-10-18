@@ -11,9 +11,16 @@ if (isset($_SESSION['usuario'])) {
     $usuario_autenticado = true;
 }
 
-$pelicula = new repositorio();
+$pelicula = new Repositorio();
 
-$peliculas = $pelicula->obtenerPeliculas();
+// Procesar el formulario de filtro por categoría
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $categoriaSeleccionada = $_POST['categoria'];
+    $peliculas = ($categoriaSeleccionada == 'todos') ? $pelicula->obtenerPeliculas() : $pelicula->obtenerPeliculasPorCategoria($categoriaSeleccionada);
+} else {
+    // Obtener todas las películas si no se aplicó el filtro
+    $peliculas = $pelicula->obtenerPeliculas();
+}
 
 // Procesar el formulario de agregar película
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -45,13 +52,11 @@ if (isset($_GET['eliminar'])) {
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <title>Cine MAX</title>
 </head>
-
 <body>
     <div class="cabecera">
         <!-- Contenido de la cabecera -->
@@ -60,13 +65,19 @@ if (isset($_GET['eliminar'])) {
                 <img class="logo" src="">
             </div>
             <div class="buscador">
-                <select>
-                    <option>Selecciona tu cine</option>
-                    <option>Rosario Sur</option>
-                    <option>Rosario Norte</option>
-                    <option>Rosario Centro</option>
+                <form method="post" action="index.php">
+                <label for="categoria">Categoría:</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="">Selecciona una categoría</option>
+                    <?php
+                    $categorias = $pelicula->obtenerCategorias();
+                    foreach ($categorias as $categoria) {
+                        echo '<option value="' . $categoria['id_categoria'] . '">' . $categoria['nom_categoria'] . '</option>';
+                    }
+                    ?>
                 </select>
-                <input type="button" value="Ver cartelera" onclick="before">
+                    <button type="submit">Filtrar</button>
+                </form>
             </div>
             <div class="IniciarSesion">
                 <a href="entrar.php" type="button" class="boton">Iniciar sesión</a>
@@ -98,18 +109,14 @@ if (isset($_GET['eliminar'])) {
                 </li>
             </ul>
             <ul>
-
             </ul>
         </div>
-        
     </nav>
 
     <div class="imagen-slider">
         <!-- Contenido del slider de imágenes -->
         <div id="banners">
             <img class="imagenes-banners" src="img/banners/.png">
-
-
         </div>
         <div class="botonesSigAnt">
             <button class="b-anterior" onclick="beforeImage()">-</button>
@@ -117,9 +124,7 @@ if (isset($_GET['eliminar'])) {
         </div>
         <script>
             var slider_content = document.getElementById('banners');
-
             var image = ["tortugas", "venecia", "oppenheimer", "hablame", "barbie", "tortugas"];
-
             var i = image.length;
 
             function nextImage() {
@@ -146,94 +151,102 @@ if (isset($_GET['eliminar'])) {
     </div>
 
     <div class="peliculas">
-    <h2>Películas</h2>
-    <div class="listapeliculas">
-    <?php
-    $contador = 0;
-    foreach ($peliculas as $pelicula) {
-        if ($contador % 3 == 0) {
-            echo '<div class="fila-peliculas">'; // Abre una nueva fila cada tres películas
-        }
-        ?>
-        <div class="pelicula-info">
-            <!-- Contenido de la película -->
-            <h3><?php echo $pelicula['nombre']; ?></h3>
-            <p>Trama: <?php echo $pelicula['trama']; ?></p>
-            <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
-            <p>Origen: <?php echo $pelicula['origen']; ?></p>
-            <p>Duración: <?php echo $pelicula['duracion']; ?> min</p>
-            <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
-            <p>Director: <?php echo $pelicula['director']; ?></p>
-            <p>Precio: $<?php echo $pelicula['precio']; ?></p>
-            <?php
-            if ($usuario_autenticado) {
-                echo '<a href="editar_pelicula.php?id=' . $pelicula['id_pelicula'] . '">Editar</a>
-                      <a href="index.php?eliminar=' . $pelicula['id_pelicula'] . '">Eliminar</a>';
+        <h2>Películas</h2>
+        <div class="listapeliculas">
+        <?php
+        $contador = 0;
+        foreach ($peliculas as $pelicula) {
+            if ($contador % 3 == 0) {
+                echo '<div class="fila-peliculas">'; // Abre una nueva fila cada tres películas
             }
             ?>
-        </div>
-        <?php
-        if ($contador % 3 == 2 || $contador == count($peliculas) - 1) {
-            echo '</div>'; // Cierra la fila actual al final de cada conjunto de tres películas o cuando se alcance la última película.
-        }
-        $contador++;
-    }
-    ?>
-</div>
-
-</div>
-
-<div class="agregar-pelicula">
-    <!-- Contenido del formulario de agregar película -->
-    <?php
-    if ($usuario_autenticado) {
-        echo '<form action="index.php" method="post">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required><br>
-                <label for="publico">Clasificación:</label>
-                <input type="text" id="publico" name="publico" required><br>
-                <label for="origen">Origen:</label>
-                <input type="text" id="origen" name="origen" required><br>
-                <label for="duracion">Duración (minutos):</label>
-                <input type="number" id="duracion" name="duracion" required><br>
-                <label for="idioma">Idioma:</label>
-                <input type="text" id="idioma" name="idioma" required><br>
-                <label for="director">Director:</label>
-                <input type="text" id="director" name="director" required><br>
-                <label for="precio">Precio:</label>
-                <input type="number" id="precio" name="precio" required><br>
-                <button type="submit">Agregar Película</button>
-              </form>';
-    }
-    ?>
-</div>
-<footer>
-    <div class="pie">
-    <!-- Contenido del pie de página -->
-        <div class="pie-padre">
-            <div class="pie-izquierda">
-                <h2>Cine MAX</h2> </div>
-            <div class="pie-centro"></div>
-            <div class="pie-derecha">
-                <h3>Siguenos</h3>
-                <ul>
-                    <li>
-                        <a href=""><img src="img/icons/Facebook_16px.png"> Facebook</a>
-                    </li>
-                    <li>
-                        <a href=""><img src="img/icons/Instagram_16px.png"> Instagram</a>
-                    </li>
-                    <li>
-                        <a href=""><img src="img/icons/Twitter_16px.png"> Twitter</a>
-                    </li>
-                </ul>
-
-
-
+            <div class="pelicula-info">
+                <!-- Contenido de la película -->
+                <h3><?php echo $pelicula['nombre']; ?></h3>
+                <p>Trama: <?php echo $pelicula['trama']; ?></p>
+                <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
+                <p>Origen: <?php echo $pelicula['origen']; ?></p>
+                <p>Duración: <?php echo $pelicula['duracion']; ?> min</p>
+                <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
+                <p>Director: <?php echo $pelicula['director']; ?></p>
+                <p>Precio: $<?php echo $pelicula['precio']; ?></p>
+                <?php
+                if ($usuario_autenticado) {
+                    echo '<a href="editar_pelicula.php?id=' . $pelicula['id_pelicula'] . '">Editar</a>
+                          <a href="index.php?eliminar=' . $pelicula['id_pelicula'] . '">Eliminar</a>';
+                }
+                ?>
             </div>
+            <?php
+            if ($contador % 3 == 2 || $contador == count($peliculas) - 1) {
+                echo '</div>'; // Cierra la fila actual al final de cada conjunto de tres películas o cuando se alcance la última película.
+            }
+            $contador++;
+        }
+        ?>
         </div>
     </div>
-</footer>
+
+    <div class="agregar-pelicula">
+        <!-- Contenido del formulario de agregar película -->
+        <?php
+        if ($usuario_autenticado) {
+            echo '<form action="index.php" method="post">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required><br>
+                    <label for="publico">Clasificación:</label>
+                    <input type="text" id="publico" name="publico" required><br>
+                    <label for="origen">Origen:</label>
+                    <input type="text" id="origen" name="origen" required><br>
+                    <label for="duracion">Duración (minutos):</label>
+                    <input type="number" id="duracion" name="duracion" required><br>
+                    <label for="idioma">Idioma:</label>
+                    <input type="text" id="idioma" name="idioma" required><br>
+                    <label for="director">Director:</label>
+                    <input type="text" id="director" name="director" required><br>
+                    <label for="precio">Precio:</label>
+                    <input type="number" id="precio" name="precio" required><br>
+                    
+                    <!-- Agregamos el select para las categorías -->
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="">Selecciona una categoría</option>';
+                        foreach ($categorias as $categoria) {
+                            echo '<option value="' . $categoria['id_categoria'] . '">' . $categoria['nom_categoria'] . '</option>';
+                        }
+            echo '</select>
+                    
+                    <button type="submit">Agregar Película</button>
+                  </form>';
+        }
+        ?>
+    </div>
+
+    <footer>
+        <div class="pie">
+            <!-- Contenido del pie de página -->
+            <div class="pie-padre">
+                <div class="pie-izquierda">
+                    <h2>Cine MAX</h2>
+                </div>
+                <div class="pie-centro"></div>
+                <div class="pie-derecha">
+                    <h3>Síguenos</h3>
+                    <ul>
+                        <li>
+                            <a href=""><img src="img/icons/Facebook_16px.png"> Facebook</a>
+                        </li>
+                        <li>
+                            <a href=""><img src="img/icons/Instagram_16px.png"> Instagram</a>
+                        </li>
+                        <li>
+                            <a href=""><img src="img/icons/Twitter_16px.png"> Twitter</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script src="funciones.js"></script>
 </body>
 </html>
