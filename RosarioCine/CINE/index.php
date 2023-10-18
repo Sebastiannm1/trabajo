@@ -1,5 +1,4 @@
 <?php
-
 require_once 'pelicula.php';
 require_once 'Repositorio.php';
 
@@ -12,31 +11,27 @@ if (isset($_SESSION['usuario'])) {
 }
 
 $pelicula = new Repositorio();
+$peliculas = array();
 
-// Procesar el formulario de filtro por categoría
+// Procesar el formulario de filtrado o agregar película
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $categoriaSeleccionada = $_POST['categoria'];
-    $peliculas = ($categoriaSeleccionada == 'todos') ? $pelicula->obtenerPeliculas() : $pelicula->obtenerPeliculasPorCategoria($categoriaSeleccionada);
-} else {
-    // Obtener todas las películas si no se aplicó el filtro
-    $peliculas = $pelicula->obtenerPeliculas();
-}
+    if (isset($_POST['categoria'])) {
+        $categoriaSeleccionada = $_POST['categoria'];
+        $peliculas = ($categoriaSeleccionada == 'todos') ? $pelicula->obtenerPeliculas() : $pelicula->obtenerPeliculasPorCategoria($categoriaSeleccionada);
+    }
 
-// Procesar el formulario de agregar película
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nombre = $_POST['nombre'];
-    $publico = $_POST['publico'];
-    $origen = $_POST['origen'];
-    $duracion = $_POST['duracion'];
-    $idioma = $_POST['idioma'];
-    $director = $_POST['director'];
-    $precio = $_POST['precio'];
+    if (isset($_POST['nombre'])) {
+        $nombre = $_POST['nombre'];
+        $publico = $_POST['publico'];
+        $origen = $_POST['origen'];
+        $duracion = $_POST['duracion'];
+        $idioma = $_POST['idioma'];
+        $director = $_POST['director'];
+        $precio = $_POST['precio'];
+        $categoria = $_POST['categoria']; 
 
-    $pelicula->agregarPelicula($nombre, $publico, $origen, $duracion, $idioma, $director, $precio);
-    
-    // Redirigir para evitar el reenvío del formulario al actualizar la página
-    header("Location: index.php");
-    exit();
+        $pelicula->agregarPelicula($nombre, $publico, $origen, $duracion, $idioma, $director, $precio, $categoria);
+    }
 }
 
 // Procesar la eliminación de películas
@@ -66,16 +61,16 @@ if (isset($_GET['eliminar'])) {
             </div>
             <div class="buscador">
                 <form method="post" action="index.php">
-                <label for="categoria">Categoría:</label>
-                <select id="categoria" name="categoria" required>
-                    <option value="">Selecciona una categoría</option>
-                    <?php
-                    $categorias = $pelicula->obtenerCategorias();
-                    foreach ($categorias as $categoria) {
-                        echo '<option value="' . $categoria['id_categoria'] . '">' . $categoria['nom_categoria'] . '</option>';
-                    }
-                    ?>
-                </select>
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="todos">Todos</option>
+                        <?php
+                        $categorias = $pelicula->obtenerCategorias();
+                        foreach ($categorias as $categoria) {
+                            echo '<option value="' . $categoria['id_categoria'] . '">' . $categoria['nom_categoria'] . '</option>';
+                        }
+                        ?>
+                    </select>
                     <button type="submit">Filtrar</button>
                 </form>
             </div>
@@ -150,33 +145,30 @@ if (isset($_GET['eliminar'])) {
         </script>
     </div>
 
-    <div class="peliculas">
-        <h2>Películas</h2>
-        <div class="listapeliculas">
+    <div class="listapeliculas">
         <?php
         $contador = 0;
+        $repositorio = new Repositorio();
+
         foreach ($peliculas as $pelicula) {
             if ($contador % 3 == 0) {
                 echo '<div class="fila-peliculas">'; // Abre una nueva fila cada tres películas
             }
             ?>
+
             <div class="pelicula-info">
                 <!-- Contenido de la película -->
                 <h3><?php echo $pelicula['nombre']; ?></h3>
                 <p>Trama: <?php echo $pelicula['trama']; ?></p>
-                <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
+                <p>Categoría: <?php echo $repositorio->obtenerNombreCategoria($pelicula['id_categoria']); ?></p>
                 <p>Origen: <?php echo $pelicula['origen']; ?></p>
-                <p>Duración: <?php echo $pelicula['duracion']; ?> min</p>
+                <p>Clasificación: <?php echo $pelicula['publico']; ?></p>
+                <p>Duración: <?php echo $pelicula['duracion']; ?> minutos</p>
                 <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
                 <p>Director: <?php echo $pelicula['director']; ?></p>
                 <p>Precio: $<?php echo $pelicula['precio']; ?></p>
-                <?php
-                if ($usuario_autenticado) {
-                    echo '<a href="editar_pelicula.php?id=' . $pelicula['id_pelicula'] . '">Editar</a>
-                          <a href="index.php?eliminar=' . $pelicula['id_pelicula'] . '">Eliminar</a>';
-                }
-                ?>
             </div>
+
             <?php
             if ($contador % 3 == 2 || $contador == count($peliculas) - 1) {
                 echo '</div>'; // Cierra la fila actual al final de cada conjunto de tres películas o cuando se alcance la última película.
@@ -184,7 +176,6 @@ if (isset($_GET['eliminar'])) {
             $contador++;
         }
         ?>
-        </div>
     </div>
 
     <div class="agregar-pelicula">

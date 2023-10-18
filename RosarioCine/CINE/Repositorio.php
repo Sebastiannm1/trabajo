@@ -60,9 +60,7 @@ class Repositorio {
     }
 
     public function agregarPelicula($nombre, $publico, $origen, $duracion, $idioma, $director, $precio) {
-        // Verifica que los campos no estén vacíos
         if (empty($nombre) || empty($publico) || empty($origen) || empty($duracion) || empty($idioma) || empty($director) || empty($precio)) {
-            // Puedes manejar la validación de errores aquí, por ejemplo, mostrar un mensaje al usuario.
             return false;
         }
 
@@ -157,6 +155,20 @@ class Repositorio {
         }
     
         return $peliculas;
-    }    
+    }
+    
+    public function obtenerNombreCategoria($categoriaId) {
+        $query = "SELECT nom_categoria FROM categoria WHERE id_categoria = ?";
+        $stmt = self::$conexion->prepare($query);
+        $stmt->bind_param("i", $categoriaId);
+        $stmt->execute();
+        $stmt->bind_result($nombreCategoria);
+    
+        if ($stmt->fetch()) {
+            return $nombreCategoria;
+        } else {
+            return "Categoría no encontrada";
+        }
+    }  
 }
 ?>
