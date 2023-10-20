@@ -1,7 +1,8 @@
 <?php
-// Retomamos la sesión iniciada, y la destruimos:
 session_start();
 session_destroy();
 
-// Redirigimos al login.
+// Redirige al login u otra página según tu necesidad
 header('Location: entrar.php?mensaje=Sesión cerrada con éxito');
+exit();
+?>

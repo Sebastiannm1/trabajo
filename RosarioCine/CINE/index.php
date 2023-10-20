@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $idioma = $_POST['idioma'];
         $director = $_POST['director'];
         $precio = $_POST['precio'];
-        $categoria = $_POST['categoria']; 
+        $categoria = $_POST['categoria'];
 
         $pelicula->agregarPelicula($nombre, $publico, $origen, $duracion, $idioma, $director, $precio, $categoria);
     }
@@ -38,10 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_GET['eliminar'])) {
     $idEliminar = $_GET['eliminar'];
     $pelicula->eliminarPelicula($idEliminar);
-    
+
     // Redirigir para actualizar la página después de eliminar la película
     header("Location: index.php");
     exit();
+}
+
+// Obtener todas las películas al cargar la página por primera vez
+if (empty($peliculas)) {
+    $peliculas = $pelicula->obtenerPeliculas();
 }
 ?>
 
@@ -63,7 +68,7 @@ if (isset($_GET['eliminar'])) {
                 <form method="post" action="index.php">
                     <label for="categoria">Categoría:</label>
                     <select id="categoria" name="categoria" required>
-                        <option value="todos">Todos</option>
+                        <option value="todos" selected>Todos</option>
                         <?php
                         $categorias = $pelicula->obtenerCategorias();
                         foreach ($categorias as $categoria) {
@@ -74,9 +79,28 @@ if (isset($_GET['eliminar'])) {
                     <button type="submit">Filtrar</button>
                 </form>
             </div>
+            <style>
+                .IniciarSesion {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .IniciarSesion .boton {
+                    margin-left: 10px; 
+                }
+            </style>
+
             <div class="IniciarSesion">
-                <a href="entrar.php" type="button" class="boton">Iniciar sesión</a>
+                <?php
+                if ($usuario_autenticado) {
+                    echo '<p>Bienvenido, ' . $usuario->nombre_usuario . '</p>';
+                    echo '<a href="logout.php" type="button" class="boton">Cerrar sesión</a>';
+                } else {
+                    echo '<a href="entrar.php" type="button" class="boton">Iniciar sesión</a>';
+                }
+                ?>
             </div>
+
         </div>
     </div>
 
@@ -167,6 +191,14 @@ if (isset($_GET['eliminar'])) {
                 <p>Idioma: <?php echo $pelicula['idioma']; ?></p>
                 <p>Director: <?php echo $pelicula['director']; ?></p>
                 <p>Precio: $<?php echo $pelicula['precio']; ?></p>
+
+                <?php
+                // Verificar si el usuario está autenticado para mostrar los enlaces de editar y eliminar
+                if ($usuario_autenticado) {
+                    echo '<a href="editar_pelicula.php?id=' . $pelicula['id_pelicula'] . '">Editar</a>';
+                    echo '<a href="index.php?eliminar=' . $pelicula['id_pelicula'] . '">Eliminar</a>';
+                }
+                ?>
             </div>
 
             <?php

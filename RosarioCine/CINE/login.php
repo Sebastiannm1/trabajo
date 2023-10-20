@@ -1,5 +1,4 @@
 <?php
-
 require_once 'controladorSesion.php';
 
 if (empty($_POST['usuario']) || empty($_POST['clave'])) {
